@@ -1,0 +1,23 @@
+[Unit]
+Description=unifi
+After=local-fs.target remote-fs.target network-online.target
+Wants=network-online.target
+Conflicts=shutdown.target
+
+[Service]
+Environment=JAVA_HOME=/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/jre
+Type=forking
+TimeoutSec=5min
+IgnoreSIGPIPE=no
+KillMode=process
+RemainAfterExit=yes
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/run/unifi
+ExecStartPre=/bin/chown -R unifi /var/run/unifi
+ExecStart=/usr/lib/unifi/bin/unifi.init start
+ExecStop=/usr/lib/unifi/bin/unifi.init stop
+ExecReload=/usr/lib/unifi/bin/unifi.init reload
+User=unifi
+
+[Install]
+WantedBy=multi-user.target
